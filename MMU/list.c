@@ -114,6 +114,13 @@ void list_add_ascending_by_address(list_t *l, block_t *newblk){
       return;
     }
   
+    if (l->head->blk->start > tempNode->blk->start){
+      node_t* curr = l->head;
+      l->head = tempNode;
+      tempNode->next = curr;
+      return;
+    }
+  
     node_t* curr = l->head->next;
     node_t* prev = l->head;
     
@@ -159,6 +166,12 @@ void list_add_ascending_by_blocksize(list_t *l, block_t *newblk){
       l->head = tempNode;
       return;
     }
+    if (compareSize(blocksize, l->head->blk)){
+      curr = l->head;
+      l->head = tempNode;
+      tempNode->next = curr;
+      return;
+    }
   
     curr = l->head->next;
     prev = l->head;
@@ -172,7 +185,6 @@ void list_add_ascending_by_blocksize(list_t *l, block_t *newblk){
       prev = curr;
       curr = curr->next;
     }
-  
     prev->next = tempNode;
     return;
 }
@@ -251,6 +263,7 @@ void list_coalese_nodes(list_t *l){
         prev->blk->end =  curr->blk->end;
         prev->next = curr->next;
         free(curr);
+        curr = prev->next;
       }else{
         prev = curr;
         curr = curr->next;
